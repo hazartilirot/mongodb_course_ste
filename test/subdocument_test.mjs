@@ -22,8 +22,8 @@ describe('Testing subdocuments', () => {
       email: 'joe@example.com',
       posts: [
         {
-          title: 'Make up a title for you post'
-        }
+          title: 'Make up a title for you post',
+        },
       ],
     });
     joe.save()
@@ -31,7 +31,7 @@ describe('Testing subdocuments', () => {
       .then(user => {
         user.posts = [
           ...user.posts,
-          { title: 'Make up a 2nd title for you post' }
+          { title: 'Make up a 2nd title for you post' },
         ];
         return user.save();
       })
@@ -39,6 +39,29 @@ describe('Testing subdocuments', () => {
       .then(user => {
         assert(user.posts[1].title === 'Make up a 2nd title for you post');
         done();
+      });
+  });
+
+  it('removes a subdocument', done => {
+    const joe = new User({
+      name: 'Joe',
+      email: 'joe@example.com',
+      posts: [
+        {
+          title: 'Make up a title for you post',
+        },
+      ],
+    });
+    joe.save()
+      .then(() => User.findOne({ email: 'joe@example.com' }))
+      .then(user => {
+        user.posts[0].remove();
+        return user.save();
       })
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then(user => {
+        assert(user.posts.length === 0);
+        done();
+      });
   });
 });
