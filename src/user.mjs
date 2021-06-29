@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import PostSchema from './post.mjs';
 
 const Schema = mongoose.Schema;
+
 const UserSchema = new Schema({
   name: {
     type: String,
@@ -11,7 +13,8 @@ const UserSchema = new Schema({
     required: [true, 'Name is required']
   },
   email: String,
-  postCount: Number
+  postCount: Number,
+  posts: [PostSchema] //a new nested Schema or SubDocument
 })
 
 const User = mongoose.model('user', UserSchema)
