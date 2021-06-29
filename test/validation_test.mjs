@@ -7,6 +7,12 @@ describe('Validating records', () => {
     const user = new User({ name: undefined });
     const validationResult = user.validateSync();
     const { message } = validationResult.errors.name;
-    assert(message === 'Name is required')
+    assert(message === 'Name is required');
+  });
+  it('requires a user\'s name longer than 2 character', () => {
+    const user = new User({ name: 'Ka' });
+    const validationResult = user.validateSync();
+    const { message } = validationResult.errors.name;
+    assert(message === 'The name must be longer than 2 characters');
   });
 });
