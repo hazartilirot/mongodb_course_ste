@@ -14,7 +14,11 @@ const UserSchema = new Schema({
   },
   email: String,
   posts: [PostSchema], //a new nested Schema or SubDocument
-  likes: Number
+  likes: Number,
+  blogPost: [{
+    type: Schema.Types.ObjectId,
+    ref: 'blogPost'   // reference to BlogPost collection
+  }]
 });
 
 UserSchema.virtual('postCount').get(function() {
