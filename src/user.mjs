@@ -15,15 +15,21 @@ const UserSchema = new Schema({
   email: String,
   posts: [PostSchema], //a new nested Schema or SubDocument
   likes: Number,
-  blogPost: [{
+  blogPosts: [{
     type: Schema.Types.ObjectId,
     ref: 'blogPost'   // reference to BlogPost collection
   }]
 });
-
+//mind a function() {} is passed intentionally so that we can reference to this
 UserSchema.virtual('postCount').get(function() {
   return this.posts.length;
 });
+//mind a function() {} is passed intentionally so that we can reference to this
+UserSchema.pre('remove', function(next) {
+  const BlogPost = mongoose.model('blogPost');
+  BlogPost.remove({ _id: { $in: this.blogPosts}})
+    .then(() => next());
+})
 
 const User = mongoose.model('user', UserSchema);
 

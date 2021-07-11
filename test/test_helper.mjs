@@ -16,8 +16,13 @@ before(done => {
 same user, we pass a callback fn "done" as an argument. Once we drop the whole
 collection with record(s) we create a record to test it. Mind we call done()
 as soon as drop function deletes the collection*/
-beforeEach(done =>
-  mongoose.connection.collections.users.drop(() =>
-    done(),
-  ),
-);
+beforeEach(done => {
+  const { users, comments, blogposts } = mongoose.connection.collections;
+  users.drop(() => 
+    comments.drop(() => 
+      blogposts.drop(() => // mongo returns a variable with letter in lower case
+        done()
+      )
+    )
+  )
+})
